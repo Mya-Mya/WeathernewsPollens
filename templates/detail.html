@@ -1,0 +1,93 @@
+{% set ns = namespace(latest_hour=none, latest_value=none) %}
+
+{% for hour, value in hourly_data %}
+    {% if value != EMPTY_VALUE %}
+        {% set ns.latest_hour = hour %}
+        {% set ns.latest_value = value %}
+    {% endif %}
+{% endfor %}
+
+{% set should_notice_lates = (ns.latest_hour is not none) and (ns.latest_hour != 23)%}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.lime.min.css">
+    <title>{{ city_name }} の花粉量</title>
+    <style>
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        article{
+            width: 8em;
+        }
+
+        .empty {
+            background-color: var(--pico-muted-color);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>{{ city_name }}</h1>
+    </header>
+    <main>
+
+        <h3>{{ target_date.strftime('%Y/%m/%d') }}</h3>
+
+        <div style="display: flex; gap: 1em;">
+            <article>
+                <h1>{{total}}</h1>
+                <p>合計</p>
+            </article>
+            {% if should_notice_lates %}
+            <article>
+                <h1>{{ns.latest_value}}</h1>
+                <p>最新({{ns.latest_hour}}時)</p>
+            </article>
+            {% endif %}
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>時</th>
+                        {% for hour, value in hourly_data %}
+                        <th>{{ hour }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>個</td>
+                        {% for hour, value in hourly_data %}
+                        <td class="{{ 'empty' if value == EMPTY_VALUE else '' }}">
+                            {% if value != EMPTY_VALUE %}
+                            {{ value }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+    <footer>
+        <p><a href="/">一覧に戻る</a></p>
+
+    </footer>
+</body>
+
+</html>
