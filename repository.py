@@ -59,7 +59,7 @@ class Store:
         datepath = self.citypath / date_str
         return datepath
 
-    def get_day_record(self, d: date, force_update: bool = False) -> list[int]:
+    def get_day_record(self, d: date, force_update: bool = False) -> list[int] | None:
         """
         指定した日付の1日分（24時間）のデータを取得します。
         キャッシュがない場合やデータが未更新の場合はAPIから取得します。
