@@ -19,7 +19,7 @@
     <main>
         <ul>
         {% for code, name in cities.items() %}
-        <li><a href="/{{ code }}/today">{{ name }} ({{ code }})</a></li>
+	<li><a href="{{ url_for('today', citycode=code) }}">{{ name }} ({{ code }})</a></li>
         {% endfor %}
     </ul>
     </main>
