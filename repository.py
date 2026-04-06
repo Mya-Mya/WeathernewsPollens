@@ -86,7 +86,7 @@ class Store:
 
         if force_update or should_update:
             self.update_data(d, d)
-            record = self.get_day_record(d)
+            record = self.read_day_record(d)
         return record
 
     def write_day_record(self, d: date, record: list[int]):
